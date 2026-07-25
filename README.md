@@ -13,9 +13,11 @@ This project features a real-time ball detection system designed to balance a hi
 > **Note:** The model was trained on Google Colab, but live inference (`main.py`) runs locally. If your webcam is physically capped at 30 FPS, the displayed FPS will not exceed this limit on your machine. Because YOLOv8 Nano is extremely lightweight, it will run at much higher frame rates on dedicated evaluation hardware.
 
 ### Dataset & Training
-
 * **Source:** Images were collected from Kaggle and auto-labeled using Roboflow.
 * **Dataset Link:** [Ball-Detection-2 on Roboflow](https://app.roboflow.com/bharathikannans-workspace-afn0w/ball-detection-2-2no1e/)
+* **Model:** YOLOv8 Nano (trained for 50 epochs at a 640px image size on a Colab T4 GPU).
+
+I trained the YOLOv8 model with the above dataset in Google Colab, downloaded the resulting `best.pt` weights, and stored them alongside `main.py`. The Python script then uses this downloaded model to detect balls in real-time via the camera feed.
 * **Model:** YOLOv8 Nano (trained for 50 epochs at a 640px image size on a Colab T4 GPU).
 
 ### Performance Metrics
