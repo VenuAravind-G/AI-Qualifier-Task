@@ -42,6 +42,9 @@ An F1 score of ~0.912 demonstrates high accuracy and consistent detection perfor
 4. Bounding boxes, live FPS, the F1 Score, and Combined Score will be displayed on the screen.
 5. Press `q` to exit the video feed.
 
+### Videos
+https://github.com/user-attachments/assets/dc599769-36b5-4ea9-967c-dc41a3791e4b
+
 ---
 
 ## 2. Qualifier 2: FaceDistanceEstimator
