@@ -1,224 +1,116 @@
-# FaceDistanceEstimator
+Here is the combined `README.md` integrating both qualifier projects into a single, cohesive document. I have organized the repository structure and mathematical formulas for maximum clarity.
 
-Monocular (single-image) face distance and horizontal deviation angle
-estimation using the **pinhole camera model**, built entirely on the
-**MediaPipe Tasks Vision API** (`mediapipe.tasks`) — no legacy
-`mp.solutions` API is used anywhere in this project.
+# HackTronix Qualifiers: Combined Repository
 
-This targets environments where `mediapipe==0.10.35` on Python 3.13 does
-**not** expose `mp.solutions` (`hasattr(mp, "solutions") == False`).
+This repository contains two computer vision qualifier projects: a real-time ball detection system and a monocular face distance estimator.
 
 ---
 
-## How it works
+## 1. Qualifier 1: Real-Time Ball Detection
 
-Given a detected face's pixel width `w_px` and pixel center `x`, and a
-calibrated camera focal length `f` (in pixels):
+This project features a real-time ball detection system designed to balance a high F1 Score with the maximum possible frames per second (FPS) using YOLOv8 Nano.
+
+> **Note:** The model was trained on Google Colab, but live inference (`main.py`) runs locally. If your webcam is physically capped at 30 FPS, the displayed FPS will not exceed this limit on your machine. Because YOLOv8 Nano is extremely lightweight, it will run at much higher frame rates on dedicated evaluation hardware.
+
+### Dataset & Training
+
+* **Source:** Images were collected from Kaggle and auto-labeled using Roboflow.
+* **Dataset Link:** [Ball-Detection-2 on Roboflow](https://app.roboflow.com/bharathikannans-workspace-afn0w/ball-detection-2-2no1e/)
+* **Model:** YOLOv8 Nano (trained for 50 epochs at a 640px image size on a Colab T4 GPU).
+
+### Performance Metrics
+
+| Metric | Score |
+| --- | --- |
+| **Precision (P)** | 0.926 |
+| **Recall (R)** | 0.898 |
+| **mAP50** | 0.945 |
+
+**F1 Score Calculation:**
+
+
+$$F1 = 2 \times \frac{0.926 \times 0.898}{0.926 + 0.898} \approx 0.912$$
+
+An F1 score of ~0.912 demonstrates high accuracy and consistent detection performance.
+
+### How to Run
+
+1. Ensure `opencv-python` and `ultralytics` are installed in your environment.
+2. Execute the inference script by running `python main.py`.
+3. The camera feed will open with the resolution set to 640x480 to reduce overhead.
+4. Bounding boxes, live FPS, the F1 Score, and Combined Score will be displayed on the screen.
+5. Press `q` to exit the video feed.
+
+---
+
+## 2. Qualifier 2: FaceDistanceEstimator
+
+A monocular (single-image) face distance and horizontal deviation angle estimator. It uses the **pinhole camera model** and is built entirely on the **MediaPipe Tasks Vision API** (`mediapipe.tasks`). It explicitly avoids the legacy `mp.solutions` API to ensure compatibility with `mediapipe==0.10.35` on Python 3.13.
+
+### How It Works
+
+Given a detected face's pixel width $w_{px}$ and pixel center $x$, alongside a calibrated camera focal length $f$ (in pixels), the system calculates the following:
 
 **Distance (depth):**
 
-```
-Z = (f * W) / w_px
-```
+
+$$Z = \frac{f \times W}{w_{px}}$$
 
 **Horizontal deviation angle:**
 
-```
-theta = arctan((x - c_x) / f)
-```
 
-Where `W` is the assumed real-world face width (default `0.15 m`,
-human faces are typically `0.14–0.16 m`) and `c_x` is the image's
-horizontal center.
+$$\theta = \arctan\left(\frac{x - c_x}{f}\right)$$
 
-Expect approximate accuracy in the range of **±50–150 cm**, since real
-face width varies per person and is not measured directly.
+*Note: $W$ is the assumed real-world face width (defaulted to 0.15 m, as human faces are typically 0.14–0.16 m) and $c_x$ is the image's horizontal center. Expect approximate accuracy in the range of ±50–150 cm.*
 
----
+### Setup & Calibration
 
-## Project structure
-
-```text
-FaceDistanceEstimator/
-│── images/
-│      calibration.jpg      # photo of a face at a KNOWN distance
-│      input.jpg            # photo to estimate distance/angle for
-│── models/
-│      face_detector.task   # MediaPipe Tasks face detector model
-│── output/
-│      result.jpg           # annotated output (generated)
-│── config.py                # paths, colors, constants, calibration I/O
-│── geometry.py               # pinhole camera model math
-│── detector.py                # MediaPipe Tasks Vision face detector wrapper
-│── calibration.py             # automatic focal length calibration
-│── main.py                    # pipeline entry point
-│── calibration_data.json      # saved calibration result (generated)
-│── requirements.txt
-│── README.md
-```
-
----
-
-## 1. Installation
+**1. Installation**
+Set up a Python 3.13 virtual environment and install the requirements:
 
 ```bash
 python3.13 -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+source venv/bin/activate
 pip install -r requirements.txt
+
 ```
 
----
-
-## 2. Download the face detector model
-
-This project uses the official MediaPipe **BlazeFace short-range** Tasks
-model. Download it into `models/face_detector.task`:
+**2. Download the Model**
+Download the official MediaPipe BlazeFace short-range Tasks model into the `models/` directory.
 
 ```bash
-curl -L -o models/face_detector.task \
-  https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.task
+curl -L -o models/face_detector.task https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.task
+
 ```
 
-Or on Windows (PowerShell):
-
-```powershell
-Invoke-WebRequest -Uri "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.task" -OutFile "models\face_detector.task"
-```
-
-If the file is missing, `detector.py` will raise a clear
-`FileNotFoundError` pointing you back to this step.
-
----
-
-## 3. Calibrate the focal length (recommended)
-
-Accurate distance estimates require a calibrated focal length for your
-specific camera. Take a photo of a face at a **known, measured distance**
-(e.g., 1.0 meter) and save it as `images/calibration.jpg`, then run:
+**3. Calibrate the Focal Length (Recommended)**
+Accurate distance estimates require a calibrated focal length for your specific camera. Take a photo of a face at a known, measured distance (e.g., 1.0 meter) and save it as `images/calibration.jpg`, then run:
 
 ```bash
 python calibration.py --image images/calibration.jpg --distance 1.0 --face-width 0.15
-```
-
-This will:
-
-1. Detect the face in the calibration image.
-2. Solve `f = (w_px * Z) / W` for focal length `f`.
-3. Print the result.
-4. Save it to `calibration_data.json` (no manual editing of `config.py`
-   required).
-
-Example output:
 
 ```
-==================================================
-Calibration successful
-==================================================
-Calibration image     : images/calibration.jpg
-Known distance (m)    : 1.0000
-Real face width (m)   : 0.1500
-Detected width (px)   : 210.34
-Computed focal length : 1402.2667 px
-Saved to              : calibration_data.json
-```
 
-If you skip calibration, `main.py` falls back to a rough default focal
-length defined in `config.py` (`DEFAULT_FOCAL_LENGTH_PX`), which will be
-less accurate.
+This automatically detects the face in the image, solves for the focal length, and saves the configuration to `calibration_data.json`. If you skip this, `main.py` will fall back to a less accurate default value.
 
----
+### Running the Estimator
 
-## 4. Run distance & angle estimation
-
-Place your target photo at `images/input.jpg` (or pass `--image`), then run:
+Place your target photo at `images/input.jpg` and execute the main pipeline:
 
 ```bash
 python main.py
-```
-
-Optional flags:
-
-```bash
-python main.py \
-  --image images/input.jpg \
-  --output output/result.jpg \
-  --model models/face_detector.task \
-  --face-width 0.15 \
-  --show
-```
-
-* `--focal-length <value>` — override the calibrated/default focal length.
-* `--show` — open a window displaying the annotated result (requires a GUI).
-
-### Example terminal output
 
 ```
-Using focal length: 1402.2667 px
-Using real face width: 0.1500 m
-Loading image: images/input.jpg
-============================================================
-MONOCULAR FACE DISTANCE ESTIMATION - RESULTS
-============================================================
-Image width           : 1280 px
-Faces detected        : 1
-------------------------------------------------------------
-Face #1
-  Confidence          : 0.912
-  Bounding box (x,y,w,h): (410.0, 155.0, 205.3, 205.3)
-  Face center (px)    : (512.7, 257.7)
-  Estimated distance  : 1.02 m
-  Deviation angle     : -3.45 deg
-  Interpretation      : Face is left of center
-------------------------------------------------------------
-============================================================
-Annotated result saved to: output/result.jpg
-```
 
-The saved `output/result.jpg` contains:
-* A green bounding box around each detected face.
-* A red dot at the face center.
-* A blue dot at the image center.
-* A yellow line connecting the two (visualizing the deviation).
-* On-image text labels for distance, angle, and confidence.
+**Optional Flags:**
 
----
+* `--image <path>`: Path to a specific input image.
+* `--output <path>`: Path to save the annotated result.
+* `--focal-length <value>`: Override the calibrated or default focal length manually.
+* `--show`: Open a GUI window displaying the annotated result (requires a desktop environment).
 
-## Module reference
+### Troubleshooting
 
-| File | Responsibility |
-|---|---|
-| `config.py` | Paths, colors, drawing settings, default constants, calibration JSON load/save |
-| `geometry.py` | `calculate_face_center`, `estimate_depth`, `estimate_angle`, `estimate_face_position`, `estimate_face_data` |
-| `detector.py` | `FaceDetector` class (MediaPipe Tasks Vision only), bounding-box/center extraction, `draw_face_annotations` |
-| `calibration.py` | `calculate_focal_length`, `run_calibration`, CLI for standalone calibration |
-| `main.py` | Orchestrates the full pipeline and CLI |
-
----
-
-## Why Tasks API only (no `mp.solutions`)
-
-This build targets MediaPipe `0.10.35` on Python 3.13, where
-`mp.solutions` is unavailable:
-
-```python
-import mediapipe as mp
-print(hasattr(mp, "solutions"))  # False
-```
-
-All detection logic therefore uses `mediapipe.tasks.python.vision`
-(`FaceDetector`, `FaceDetectorOptions`, `BaseOptions`) exclusively, with
-`mp.Image` / `mp.ImageFormat.SRGB` for image conversion.
-
----
-
-## Troubleshooting
-
-* **`FileNotFoundError: MediaPipe face detector model not found`** — download
-  the `.task` model as described in step 2.
-* **`RuntimeError: No face detected in calibration image`** — use a clear,
-  front-facing, well-lit photo; make sure only one face is prominent.
-* **Distance seems off** — re-run calibration with a more precisely
-  measured distance, or adjust `--face-width` closer to the subject's
-  actual face width.
-* **No GUI window with `--show`** — this is expected on headless/server
-  environments; the annotated image is still saved to `output/`.
+* **Model Not Found Error:** Ensure the `.task` model was downloaded successfully in Step 2.
+* **No Face Detected in Calibration:** Use a clear, well-lit, front-facing photo with a single prominent face.
+* **Inaccurate Distance Estimates:** Re-run the calibration script with a more precisely measured distance, or adjust the `--face-width` argument closer to your subject's actual face width.
