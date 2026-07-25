@@ -120,9 +120,17 @@ python main.py
 * **Inaccurate Distance Estimates:** Re-run the calibration script with a more precisely measured distance, or adjust the `--face-width` argument closer to your subject's actual face width.
 
 ### Images
-#### Example: Calibration and Image
+#### Example 1: Calibration and Image
+<img width="918" height="1632" alt="20260725_193629" src="https://github.com/user-attachments/assets/9bd46975-63e0-4019-8d44-4a60283bc13d" /> <img width="1600" height="1204" alt="Example 1 Calibration" src="https://github.com/user-attachments/assets/e05c8322-0faa-4d47-8851-7ebab08d07f4" />
+
+#### Exmaple 1: Result
+<img width="800" height="602" alt="Example 1" src="https://github.com/user-attachments/assets/c70b3d6d-eedd-4f61-b8c1-a7ab8b3344b2" />
+
+
+#### Example 2: Calibration and Image
 <img width="340" height="512" alt="calibration" src="https://github.com/user-attachments/assets/edebdd58-e1fe-433f-b2f6-ae7a40ed01a4" /> <img width="340" height="512" alt="input" src="https://github.com/user-attachments/assets/61fd2204-a832-4086-883e-a6916dc014af" />
-#### Example: Results
+
+#### Example 2: Results
 <img width="340" height="512" alt="result" src="https://github.com/user-attachments/assets/b3abb304-99e6-4b1b-8dd9-6e971e6f44a7" />
 
 
