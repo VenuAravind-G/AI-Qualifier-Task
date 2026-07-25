@@ -118,3 +118,9 @@ python main.py
 * **Model Not Found Error:** Ensure the `.task` model was downloaded successfully in Step 2.
 * **No Face Detected in Calibration:** Use a clear, well-lit, front-facing photo with a single prominent face.
 * **Inaccurate Distance Estimates:** Re-run the calibration script with a more precisely measured distance, or adjust the `--face-width` argument closer to your subject's actual face width.
+
+### Images
+#### Calibration and Image
+<img width="680" height="1024" alt="calibration" src="https://github.com/user-attachments/assets/edebdd58-e1fe-433f-b2f6-ae7a40ed01a4" /> <img width="680" height="1024" alt="input" src="https://github.com/user-attachments/assets/61fd2204-a832-4086-883e-a6916dc014af" />
+#### Results
+<img width="680" height="1024" alt="result" src="https://github.com/user-attachments/assets/b3abb304-99e6-4b1b-8dd9-6e971e6f44a7" />
