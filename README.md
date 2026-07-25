@@ -121,6 +121,6 @@ python main.py
 
 ### Images
 #### Calibration and Image
-<img width="680" height="1024" alt="calibration" src="https://github.com/user-attachments/assets/edebdd58-e1fe-433f-b2f6-ae7a40ed01a4" /> <img width="680" height="1024" alt="input" src="https://github.com/user-attachments/assets/61fd2204-a832-4086-883e-a6916dc014af" />
+<img width="340" height="512" alt="calibration" src="https://github.com/user-attachments/assets/edebdd58-e1fe-433f-b2f6-ae7a40ed01a4" /> <img width="340" height="512" alt="input" src="https://github.com/user-attachments/assets/61fd2204-a832-4086-883e-a6916dc014af" />
 #### Results
-<img width="680" height="1024" alt="result" src="https://github.com/user-attachments/assets/b3abb304-99e6-4b1b-8dd9-6e971e6f44a7" />
+<img width="340" height="512" alt="result" src="https://github.com/user-attachments/assets/b3abb304-99e6-4b1b-8dd9-6e971e6f44a7" />
