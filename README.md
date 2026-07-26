@@ -121,7 +121,7 @@ python main.py
 
 ### Images
 #### Example 1: Calibration and Image
-<img width="229" height="408" alt="20260725_193629" src="https://github.com/user-attachments/assets/9bd46975-63e0-4019-8d44-4a60283bc13d" /> <img width="800" height="602" alt="Example 1 Calibration" src="https://github.com/user-attachments/assets/e05c8322-0faa-4d47-8851-7ebab08d07f4" />
+<img width="800" height="602" alt="Example 1 Calibration" src="https://github.com/user-attachments/assets/e05c8322-0faa-4d47-8851-7ebab08d07f4" />
 
 #### Exmaple 1: Result
 <img width="800" height="602" alt="Example 1" src="https://github.com/user-attachments/assets/c70b3d6d-eedd-4f61-b8c1-a7ab8b3344b2" />
